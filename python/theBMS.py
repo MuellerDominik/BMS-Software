@@ -12,13 +12,20 @@ def renew_balancing(bms):
 
 def main():
 	bms = BMS(1, period=100)
+	counter = 2
 
 	while True:
+		renew_balancing(bms)
 		bms.measure_ambient_temp()
 		renew_balancing(bms)
 		bms.temp_mon()
 		renew_balancing(bms)
-		bms.measure_voltages()
+		if counter == 2:
+			bms.measure_voltages()
+			renew_balancing(bms)
+			counter = 0
+		else:
+			counter += 1
 
 		# Debug
 		print("#####################")

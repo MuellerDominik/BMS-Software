@@ -33,11 +33,12 @@ class isoSPI:
 	_CE1 = 26
 
 	def __init__(self):
+		self.line = 0
 		pass
 
 	def xfer(self, spi, boards, cmd, data=[], error_check=True):
 		"""Returns the result or None in case of a connection error."""
-		tx = ['/home/pi/cc/isoSPI', '0', str(spi), str(boards), str(cmd)]
+		tx = ['/home/pi/cc/isoSPI', str(self.line), str(spi), str(boards), str(cmd)]
 		for d in data:
 			tx.append(str(d))
 
@@ -45,12 +46,13 @@ class isoSPI:
 		count = 1
 		while error:
 			error = False
-			if count > 6:
+			if count > 2:
 				return None
-			elif count == 4:
-				tx[1] = '1'
+			elif count == 2:
+				self.line ^= 1
+				tx[1] = str(self.line)
 			count += 1
-			
+
 			res = subprocess.run(tx, stdout=subprocess.PIPE)
 			stdout = res.stdout.decode('utf-8')
 			length = int(len(stdout) / 16)

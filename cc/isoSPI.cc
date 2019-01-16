@@ -2,8 +2,6 @@
 #include <iostream>
 #include <iomanip>
 
-#define BYTE_MASK 0xff
-
 int main(int argc, char** argv) {
 	char *end = NULL;
 
@@ -20,14 +18,16 @@ int main(int argc, char** argv) {
 	char spi_read[4 + boards*8] = {0x7, 0x22, 0x32, 0xd6}; // Readback SPI answer
 
 	for(int i = 3; i >= 0; --i) {
-		buff[3 - i] = (char) ((cmd & (BYTE_MASK << i*8)) >> i*8); // Add CMD bytes
+		unsigned long byte_mask = 0xff;
+		buff[3 - i] = (char) ((cmd & (byte_mask << i*8)) >> i*8); // Add CMD bytes
 	}
 
 	if(argc > 5) {
-		for(unsigned i = 0; i < (argc - 4); ++i) {
-			unsigned long long tmp = strtoull(argv[i + 4], &end, 10);
+		for(unsigned i = 0; i < (argc - 5); ++i) {
+			unsigned long long byte_mask = 0xff;
+			unsigned long long tmp = strtoull(argv[i + 5], &end, 10);
 			for(int j = 7; j >= 0; --j) {
-				buff[i] = (tmp & (BYTE_MASK << j*8)) >> j*8; // Add DATA bytes
+				buff[i*8 + 11 - j] = (tmp & (byte_mask << j*8)) >> j*8; // Add DATA bytes
 			}
 		}
 	}

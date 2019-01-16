@@ -151,7 +151,7 @@ class BMS():
 	_POLY_B = -5.7750e-7
 	_POLY_C = -4.1830e-12
 	_PT1000 = 1000
-	_SERIES_R = 3900 		# Adjusted Value (Nominal: 3900 Ohm)
+	_SERIES_R = 998.16 		# Adjusted Value (Nominal: 3900 Ohm)
 
 	def __init__(self, boards, period=100):
 		self.isoSPI = isoSPI()
@@ -273,7 +273,7 @@ class BMS():
 			average += voltage
 		average /= len(self.voltages)
 
-		threshold = 0.1
+		threshold = 0.2
 		over = []
 		under = []
 		inside = []
@@ -372,7 +372,7 @@ class BMS():
 		"""Checks if the temperature of each cell (6 blocks à 36 cells) is OK."""
 		temp_ok = []
 		cells_not_oh = True
-		for i in range(self.boards):
+		for i in range(self.blocks):
 			data = [i << 5*8] * self.boards
 			self.tx(BMS._WRCFGB, data)
 			cfgar_p = self.rx(BMS._RDCFGA)[0] # Primary Board
@@ -394,8 +394,11 @@ class BMS():
 		avar_p = self.rx(BMS._RDAUXA)[0] # Primary Board
 		v_ref2 = self.calc_voltages_from_reg(avbr_p)[2]
 		v_pt1000 = self.calc_voltages_from_reg(avar_p)[0]
-		rt = BMS._SERIES_R / (v_ref2/v_pt1000 - 1)
-		self.ambient_temp = self.temp(BMS._PT1000, rt)
+		if v_ref2 <= v_pt1000 or v_pt1000 == 0:
+			self.ambient_temp = -274
+		else:
+			rt = BMS._SERIES_R / (v_ref2/v_pt1000 - 1)
+			self.ambient_temp = self.temp(BMS._PT1000, rt)
 		if self.ambient_temp >= 0 and self.ambient_temp <= 45:
 			self.ambient_temp_ok = True
 		else:
