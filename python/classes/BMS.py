@@ -151,7 +151,7 @@ class BMS():
 	_POLY_B = -5.7750e-7
 	_POLY_C = -4.1830e-12
 	_PT1000 = 1000
-	_SERIES_R = 998.16 		# Adjusted Value (Nominal: 3900 Ohm)
+	_SERIES_R = 1000.00 	# Adjusted Value (Nominal: 1 kOhm)
 
 	def __init__(self, boards, period=100):
 		self.isoSPI = isoSPI()
