@@ -102,11 +102,11 @@ $ ./isoSPI 0 3 2 119612594 9986886141864380864 9986886141864380864
 
 ## Download
 
-* [**isoSPI v1.0.1**](https://github.com/MuellerDominik/BMS-Software/releases/download/v1.0.1/isoSPI "isoSPI v1.0.1") - Latest binary release (NOT YET UPLOADED)
+* [**isoSPI v1.0.1**](https://github.com/MuellerDominik/BMS-Software/releases/download/v1.0.1/isoSPI "isoSPI v1.0.1") - Latest binary release
 
 ```bash
 $ sha256sum isoSPI
-[NOT YET COMPUTED]  isoSPI
+6f4c2d65629b5e4096543f3e0421dc2bdfe4309a991de7dbc617c6715db0b6f6  isoSPI
 ```
 
 The C++ file [`isoSPI.cc`](cc/isoSPI.cc "isoSPI.cc") was compiled on the Raspberry Pi Zero W with the following command:
